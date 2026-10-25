@@ -1,0 +1,72 @@
+@use "variables" as *;
+
+// LOGIN Y REGISTRO
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 16px;
+  background: linear-gradient(135deg, $ivory 0%, #f0dfd1 100%);
+
+  &__content {
+    width: 100%;
+    max-width: 480px;
+    padding: 44px 44px 34px;
+    background: $paper;
+    border: 1px solid $line;
+    border-radius: 18px;
+    box-shadow: $shadow;
+
+    > h1 {
+      margin: 0 0 6px;
+      font: 700 34px/1 "Oswald", sans-serif;
+      text-align: center;
+      text-transform: uppercase;
+      color: $red;
+    }
+  }
+
+  &__subtitle {
+    margin-bottom: 28px;
+    text-align: center;
+    color: $muted;
+  }
+
+  &__links {
+    margin-top: 22px;
+    text-align: center;
+    color: $muted;
+    line-height: 1.9;
+
+    a {
+      color: $red;
+      font-weight: 700;
+    }
+  }
+
+  .ui.form .field > label {
+    color: $ink;
+    font-weight: 600;
+  }
+
+  .ui.form .field {
+    margin-bottom: 18px;
+  }
+
+  .ui.primary.button {
+    margin-top: 8px;
+    padding: 14px;
+  }
+}
+
+.error-404 > h1 {
+  font-size: 90px;
+}
+
+@media (max-width: 520px) {
+  .auth-page__content {
+    padding: 32px 22px 26px;
+  }
+}

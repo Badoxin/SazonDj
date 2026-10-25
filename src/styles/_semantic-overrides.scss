@@ -1,0 +1,33 @@
+@use "variables" as *;
+
+// Ajustes a los componentes de Semantic UI para que combinen con SAZÓN
+.ui.input input,
+.ui.form input[type="text"],
+.ui.form input[type="email"],
+.ui.form input[type="password"] {
+  background-color: #f4efe8 !important;
+  border-color: #f4efe8 !important;
+  border-radius: 10px !important;
+
+  &:focus {
+    background-color: #fff !important;
+    border-color: $terracotta !important;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+.ui.primary.button {
+  background-color: $red !important;
+  color: #fff;
+  border-radius: 999px;
+
+  &:hover,
+  &:focus {
+    background-color: $red-dark !important;
+  }
+}
+
+.ui.modal > .header {
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+}

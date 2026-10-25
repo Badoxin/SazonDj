@@ -1,0 +1,10 @@
+# Entorno virtual y archivos generados
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Secretos y datos locales (NO se suben a GitHub)
+.env
+db.sqlite3
+*.sqlite3
