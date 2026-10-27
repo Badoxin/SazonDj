@@ -1,0 +1,75 @@
+/* ============================================================================
+   SAZÓN · estilos nuevos (menú, perfil, filtros con teclado, respuestas y likes).
+   Se carga DESPUÉS de index.css (ver main.tsx), por eso puede ajustar lo anterior.
+   ============================================================================ */
+
+/* ---------- Menú: logo a la izquierda; Inicio, Recetas y Perfil a la derecha ---------- */
+.header-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.logo { text-align: left; }
+.header-nav { display: flex; align-items: center; gap: 28px; }
+.nav-link { position: relative; border: 0; background: none; font-size: 13px; font-weight: 600; padding: 12px 0; cursor: pointer; }
+.nav-link.active::after { content: ""; position: absolute; bottom: 5px; left: 0; right: 0; height: 2px; background: var(--red); }
+.profile-button { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); padding: 5px 18px 5px 5px; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s ease; }
+.profile-button:hover, .profile-button.active { border-color: var(--red); color: var(--red); }
+.profile-button .avatar { width: 32px; height: 32px; background: var(--red); color: white; font-size: 11px; }
+@media (max-width: 960px) {
+  .header-nav { display: none; }
+  .header-inner::before { content: none; }
+  .header-inner { height: 76px; padding: 0 20px; }
+}
+
+/* ---------- Perfil ---------- */
+.profile-page { background: var(--ivory); min-height: 70vh; padding-bottom: 90px; }
+.profile-hero { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; padding-top: 70px; padding-bottom: 36px; }
+.profile-avatar { flex: 0 0 auto; width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: white; font: 700 34px "Oswald", sans-serif; letter-spacing: .04em; }
+.profile-info { flex: 1 1 280px; min-width: 0; }
+.profile-info h1 { font-size: clamp(34px, 4vw, 52px); line-height: 1; margin-bottom: 10px; overflow-wrap: anywhere; }
+.profile-info p:not(.eyebrow) { color: var(--muted); margin-bottom: 4px; overflow-wrap: anywhere; }
+.logout-button { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--red); background: transparent; color: var(--red); border-radius: 999px; padding: 11px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s ease; }
+.logout-button:hover { background: var(--red); color: white; }
+.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.profile-stats > div { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 22px; text-align: center; }
+.profile-stats b { display: block; font: 700 38px "Oswald", sans-serif; color: var(--red); line-height: 1; margin-bottom: 8px; }
+.profile-stats span { font-size: 11px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+.saved-section { padding-top: 60px; }
+.card-remove { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; display: grid; place-items: center; background: rgba(255,253,249,.95); color: var(--red); box-shadow: 0 4px 14px rgba(0,0,0,.2); cursor: pointer; transition: .2s ease; }
+.card-remove:hover { background: var(--red); color: white; }
+@media (max-width: 760px) { .profile-stats { grid-template-columns: 1fr; } .profile-avatar { width: 84px; height: 84px; font-size: 28px; } }
+
+/* ---------- Botón de guardar receta ---------- */
+.detail-actions button.saved { background: var(--red); color: white; }
+.detail-actions button:disabled { opacity: .6; cursor: wait; }
+.save-error { text-align: center; margin: 12px 0 0; }
+
+/* ---------- Filtros con búsqueda por teclado ---------- */
+.filters { gap: 18px; }
+.filter-field { position: relative; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.filter-field:last-child { border-right: 0; }
+.combo-box { display: flex; align-items: center; }
+.combo-box:focus-within { box-shadow: inset 0 -2px 0 var(--terracotta); }
+.combo-box input { flex: 1; min-width: 0; border: 0; background: transparent; padding: 6px 12px; outline: 0; font: inherit; font-weight: 600; }
+.combo-clear { border: 0; background: none; color: var(--muted); font-size: 22px; line-height: 1; padding: 0 12px; cursor: pointer; }
+.combo-clear:hover { color: var(--red); }
+.combo-list { position: absolute; top: 100%; left: 0; right: 14px; z-index: 25; max-height: 260px; overflow-y: auto; margin: 6px 0 0; padding: 6px; list-style: none; background: white; border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow); }
+.combo-list li { padding: 9px 12px; border-radius: 4px; font-size: 14px; cursor: pointer; }
+.combo-list li.active { background: var(--ivory); color: var(--red); }
+.combo-list li[aria-selected="true"] { font-weight: 700; }
+.combo-list .combo-empty { color: var(--muted); font-size: 13px; cursor: default; }
+.clear-x { border: 0; background: none; color: var(--muted); font-size: 24px; line-height: 1; padding: 0 4px; cursor: pointer; }
+.clear-x:hover { color: var(--red); }
+@media (max-width: 760px) { .filters { grid-template-columns: 1fr; } .filter-field { border-right: 0; } }
+
+/* ---------- Comentarios: respuestas y likes ---------- */
+.comment-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.comment-actions button { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.comment-actions button.liked { color: var(--red); font-weight: 700; }
+.comment-replies { margin: 0 0 6px 56px; padding-left: 18px; border-left: 2px solid var(--sand); }
+.comment.reply-item { grid-template-columns: 34px 1fr; gap: 12px; padding: 16px 0 0; border-top: 0; }
+.comment.reply-item .avatar { width: 34px; height: 34px; }
+.reply-form { display: grid; gap: 10px; margin-top: 14px; }
+.reply-form textarea { width: 100%; min-height: 76px; resize: vertical; border: 1px solid var(--line); border-radius: 5px; padding: 12px; font: inherit; outline: 0; background: white; }
+.reply-form textarea:focus { border-color: var(--terracotta); }
+.reply-form-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.reply-form-actions > div { display: flex; align-items: center; gap: 10px; }
+.reply-form small { color: var(--muted); }
+@media (max-width: 760px) { .comment-replies { margin-left: 18px; padding-left: 12px; } }
