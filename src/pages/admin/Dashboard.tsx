@@ -3,7 +3,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Button, Form, Icon, Label, Loader, Message, Modal, Table } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 import { ApiError } from "../../api/http";
+import { api as recipesApi, type RecipeSummary } from "../../api/recipes";
 import type { UserRecord } from "../../api/user";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../hooks/useUser";
@@ -71,6 +73,10 @@ export function Dashboard() {
   const [users, setUsers] = useState<UserRecord[] | null>(null);
   const [error, setError] = useState("");
   const [creating, setCreating] = useState(false);
+  const [recipe, setRecipe] = useState<RecipeSummary | null>(null);
+  const [recipeLoading, setRecipeLoading] = useState(true);
+  const [recipeError, setRecipeError] = useState(false);
+  const [recipeReload, setRecipeReload] = useState(0);
   const meId = auth?.me.id;
 
   const load = async () => {
@@ -82,6 +88,17 @@ export function Dashboard() {
     }
   };
   useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setRecipeLoading(true);
+    setRecipeError(false);
+    recipesApi.random(controller.signal)
+      .then((suggestion) => setRecipe(suggestion))
+      .catch(() => { if (!controller.signal.aborted) setRecipeError(true); })
+      .finally(() => { if (!controller.signal.aborted) setRecipeLoading(false); });
+    return () => controller.abort();
+  }, [recipeReload]);
 
   const replace = (updated: UserRecord) => setUsers((list) => list?.map((u) => (u.id === updated.id ? updated : u)) ?? null);
 
@@ -112,12 +129,27 @@ export function Dashboard() {
       <div className="dashboard__head">
         <div>
           <h1>Usuarios</h1>
-          <p>{users ? `${users.length} usuarios registrados` : "Cargando…"}</p>
+          <p>Sesión iniciada como <strong>{auth?.me.username}</strong>{users ? ` · ${users.length} usuarios registrados` : ""}</p>
         </div>
         <Button primary icon labelPosition="left" onClick={() => setCreating(true)}>
           <Icon id="new-user-plus" name="plus" /> Nuevo usuario
         </Button>
       </div>
+
+      <section className="dashboard__recipe" aria-labelledby="dashboard-recipe-title">
+        <div className="dashboard__recipe-copy">
+          <p className="eyebrow">INSPIRACIÓN DESDE THEMEALDB</p>
+          <h2 id="dashboard-recipe-title">Una idea para cocinar hoy</h2>
+          <p>Esta recomendación llega desde TheMealDB a través de la API de Django.</p>
+          {recipeLoading ? <p role="status">Buscando una receta…</p>
+            : recipeError ? <Message warning content="No pudimos cargar la receta." />
+            : recipe && <p><strong>{recipe.name}</strong></p>}
+          {recipeError && <Button size="small" onClick={() => setRecipeReload((n) => n + 1)}>Reintentar</Button>}
+          {recipe && !recipeLoading && <Button size="small" onClick={() => setRecipeReload((n) => n + 1)}>Otra sugerencia</Button>}
+          {recipe && !recipeLoading && <Link className="dashboard__recipe-link" to={`/receta/${recipe.id}`}>Ver receta</Link>}
+        </div>
+        {recipe && !recipeLoading && <img src={recipe.image} alt={recipe.name} loading="lazy" />}
+      </section>
 
       {error && (
         <Message negative>

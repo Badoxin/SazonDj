@@ -79,7 +79,8 @@ Cada falla se **reprodujo** con el código del manual tal cual (proyecto de prue
 - **React Router v6**, como indica el manual.
 - **TypeScript** en el frontend (el manual usa JavaScript).
 - **Estructura de carpetas** del manual: `api/`, `context/`, `hooks/`, `layouts/`, `routes/`, `pages/{admin,client,common}`.
-- **Dashboard** con CRUD real: lista usuarios, crea (modal), activa/desactiva con `PATCH` y elimina. Un administrador no puede eliminarse ni desactivarse a sí mismo.
+- **Dashboard** con CRUD real: lista usuarios, crea (modal), activa/desactiva con `PATCH` y elimina. Un administrador no puede eliminarse ni desactivarse a sí mismo. También muestra el nombre de la sesión de `AuthContext` y una recomendación de TheMealDB consultada desde el backend.
+- **SOAP:** `GET /api/v1/soap/country-info/?code=MX` usa Zeep para consultar el servicio público CountryInfo; devuelve país, capital, moneda y lada telefónica. El endpoint documenta el parámetro en Swagger, valida el código ISO y responde con un error controlado si el servicio remoto no está disponible.
 
 ### Riesgo aceptado
 El token JWT va en `localStorage` porque así lo pide el manual. Es más expuesto a XSS que una cookie `httpOnly`

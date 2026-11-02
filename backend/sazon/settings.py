@@ -172,6 +172,7 @@ CORS_ALLOW_CREDENTIALS = False
 # ---------------------------------------------------------------- API externa de recetas (TheMealDB)
 THEMEALDB_API_KEY = env("THEMEALDB_API_KEY", "1")
 THEMEALDB_BASE_URL = env("THEMEALDB_BASE_URL", "https://www.themealdb.com/api/json/v1")
+SOAP_COUNTRY_WSDL = env("SOAP_COUNTRY_WSDL", "http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL")
 
 # ---------------------------------------------------------------- Varios
 LANGUAGE_CODE = "es-mx"

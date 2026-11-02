@@ -1,3 +1,4 @@
+import logging
 import re
 
 from drf_yasg import openapi
@@ -7,11 +8,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from recipes import mealdb
+from recipes.soap import SoapServiceError, country_info
 
 # Validación de entradas: nunca se confía en lo que manda el cliente.
 QUERY_RE = re.compile(r"^[\w '.,-]{1,60}$")
 LABEL_RE = re.compile(r"^[A-Za-z ]{1,30}$")
 ID_RE = re.compile(r"^\d{1,8}$")
+NUMBER_RE = re.compile(r"^\d{1,15}$")
+logger = logging.getLogger(__name__)
 
 
 def bad_request(message):
@@ -74,6 +78,46 @@ class RandomView(PublicRecipeView):
         if not recipe:
             return Response({"error": "No encontramos una receta."}, status=404)
         return Response({"recipe": recipe})
+
+
+class CountryInfoSOAPView(PublicRecipeView):
+    @swagger_auto_schema(
+        manual_parameters=[openapi.Parameter(
+            "code", openapi.IN_QUERY,
+            description="Código ISO 3166-1 alfa-2 del país; por ejemplo MX.",
+            type=openapi.TYPE_STRING, required=True,
+        )],
+        responses={
+            200: openapi.Response(
+                "Información obtenida del servicio SOAP público de países.",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "code": openapi.Schema(type=openapi.TYPE_STRING),
+                        "country": openapi.Schema(type=openapi.TYPE_STRING),
+                        "capital": openapi.Schema(type=openapi.TYPE_STRING),
+                        "currency_code": openapi.Schema(type=openapi.TYPE_STRING),
+                        "phone_code": openapi.Schema(type=openapi.TYPE_STRING),
+                    },
+                ),
+            ),
+            400: "Código de país no válido.",
+            404: "No se encontró información para el país.",
+            502: "El servicio SOAP no está disponible.",
+        },
+    )
+    def get(self, request):
+        code = request.query_params.get("code", "").strip().upper()
+        if not re.fullmatch(r"[A-Z]{2}", code):
+            return bad_request("Envía un código de país ISO de dos letras, por ejemplo MX.")
+        try:
+            info = country_info(code)
+        except SoapServiceError:
+            logger.exception("El servicio SOAP de países no respondió.")
+            return Response({"error": "El servicio SOAP no está disponible. Inténtalo más tarde."}, status=502)
+        if not info or not info.get("country"):
+            return Response({"error": "No encontramos información para ese país."}, status=404)
+        return Response(info)
 
 
 class CategoriesView(PublicRecipeView):

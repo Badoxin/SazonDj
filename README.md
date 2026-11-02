@@ -32,6 +32,8 @@ python manage.py runserver
 ```
 API en http://localhost:8000 · Swagger en http://localhost:8000/swagger/ · Admin en http://localhost:8000/admin/
 
+En Swagger también está `GET /api/v1/soap/country-info/?code=MX`, que consulta mediante Zeep el servicio SOAP público de países y devuelve país, capital y moneda. El Dashboard de administración muestra el usuario autenticado y una sugerencia de receta obtenida desde TheMealDB a través de Django.
+
 ### 2. Frontend
 ```bash
 copy .env.example .env           # Mac/Linux: cp .env.example .env

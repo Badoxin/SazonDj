@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from recipes.views import CountryInfoSOAPView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -9,7 +10,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="API de SAZÓN",
         default_version="v1",
-        description="Usuarios (registro, login con JWT, perfil) y recetas (TheMealDB).",
+        description="Usuarios con JWT, recetas de TheMealDB y conversión de número mediante SOAP.",
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
@@ -19,6 +20,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("users.urls")),
     path("api/v1/recipes/", include("recipes.urls")),
+    path("api/v1/soap/country-info/", CountryInfoSOAPView.as_view(), name="soap-country-info"),
 ]
 
 # La documentación se puede apagar en producción con DJANGO_ENABLE_DOCS=False

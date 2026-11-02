@@ -1,5 +1,5 @@
 # Django y Django REST Framework (el manual usa estas librerías)
-Django>=4.2,<7.0
+Django>=5.2,<5.3
 djangorestframework>=3.15
 drf-yasg>=1.21.7
 djangorestframework-simplejwt>=5.3
@@ -9,3 +9,4 @@ django-cors-headers>=4.4
 python-dotenv>=1.0
 requests>=2.32
 mysqlclient>=2.2
+zeep>=4.3
